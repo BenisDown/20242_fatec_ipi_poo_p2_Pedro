@@ -11,20 +11,22 @@ public class ConnectionFactory{
   private static final String PASSWORD = "123456";
   
 
-  public static Connection conectar(){
-    try{
-      var s = String.format(
+  public static Connection conectar() {
+    Connection connection = null;
+    try {
+      Class.forName("org.postgresql.Driver");
+      var url = String.format(
         "jdbc:postgresql://%s:%s/%s",
         HOST, PORT, DB
       );
-      Connection c = DriverManager.getConnection(
-        s, USER, PASSWORD
-      );
-      return c;
-    }
-    catch(Exception e){
+      connection = DriverManager.getConnection(url, USER, PASSWORD);
+    } catch (ClassNotFoundException e) {
+      System.err.println("PostgreSQL JDBC Driver not found.");
       e.printStackTrace();
-      return null;
+    } catch (SQLException e) {
+      System.err.println("Connection failed.");
+      e.printStackTrace();
     }
+    return connection;
   }
 }
